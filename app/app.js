@@ -12,7 +12,7 @@ const mysqlConfig = {
     user: 'root',
     password: 'test123',
     database: 'expenses_tracker',
-    port: 3307
+    port: 3306
 };
 
 const connection = mysql.createConnection(mysqlConfig);
