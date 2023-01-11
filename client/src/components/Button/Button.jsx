@@ -7,6 +7,10 @@ const ButtonStyled = styled.button`
     color: #fff;
     font-size: 16px;
     padding: 10px 20px;
+
+    &:disabled {
+        opacity: 0.5;
+    }
 `;
 
 export const Button = (props) => {

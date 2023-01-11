@@ -5,6 +5,10 @@ const InputStyled = styled.input`
     border-radius: 10px;
     font-size: 16px;
     padding: 10px 20px;
+
+    &:disabled {
+        opacity: 0.5;
+    }
 `;
 
 export const Input = ({ ...props }) => {
