@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
+import { Button } from "../../components/Button/Button";
+import { Input } from "../../components/Input/Input";
 import { LOGGED_IN_USER } from "../../constants/constants";
 
 const ExpensesList = styled.ul`
@@ -78,20 +80,20 @@ export const Expenses = () => {
     return (
         <ExpensesList>
             <form onSubmit={handleExpenseAdd}>
-                <input 
+                <Input 
                     placeholder="Type" 
                     required 
                     onChange={(e) => setType(e.target.value)}
                     value={type}
                 />
-                <input 
+                <Input 
                     placeholder="Amount" 
                     type="number" 
                     required 
                     onChange={(e) => setAmount(e.target.value)}
                     value={amount}
                 />
-                <button>Add</button>
+                <Button>Add</Button>
             </form>
             <h2>Total spent: €{totalSum}</h2>
             {expenses.map((exp) => (
