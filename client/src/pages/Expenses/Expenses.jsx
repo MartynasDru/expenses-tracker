@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { Button } from "../../components/Button/Button";
+import { Form } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
 import { LOGGED_IN_USER } from "../../constants/constants";
 
@@ -64,7 +65,7 @@ export const Expenses = () => {
             body: JSON.stringify({
                 type, 
                 amount,
-                userId: 1
+                userId: LOGGED_IN_USER.id
             })
         })
         .then((res) => res.json())
@@ -79,7 +80,7 @@ export const Expenses = () => {
 
     return (
         <ExpensesList>
-            <form onSubmit={handleExpenseAdd}>
+            <Form onSubmit={handleExpenseAdd}>
                 <Input 
                     placeholder="Type" 
                     required 
@@ -94,7 +95,7 @@ export const Expenses = () => {
                     value={amount}
                 />
                 <Button>Add</Button>
-            </form>
+            </Form>
             <h2>Total spent: €{totalSum}</h2>
             {expenses.map((exp) => (
                 <ExpensesListItem key={exp.id}>
