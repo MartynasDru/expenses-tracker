@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from 'styled-components';
 import { Button } from "../../components/Button/Button";
 import { Form } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
-import { LOGGED_IN_USER } from "../../constants/constants";
+import { UserContext } from '../../contexts/UserContextWrapper';
 
 const ExpensesList = styled.ul`
     display: flex;
@@ -41,22 +41,22 @@ export const Expenses = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [type, setType] = useState('');
     const [amount, setAmount] = useState('');
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_URL}/expenses?userId=${LOGGED_IN_USER.id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/expenses?userId=${user.id}`)
             .then(res => res.json())
             .then(data => {
                 setExpenses(data);
                 setIsLoading(false);
             });
-    }, []);
+    }, [user.id]);
 
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
-    const handleExpenseAdd = (e) => {
-        e.preventDefault();
+    const handleExpenseAdd = () => {
         fetch(`${process.env.REACT_APP_API_URL}/expenses`, {
             method: 'POST',
             headers: {
@@ -65,7 +65,7 @@ export const Expenses = () => {
             body: JSON.stringify({
                 type, 
                 amount,
-                userId: LOGGED_IN_USER.id
+                userId: user.id
             })
         })
         .then((res) => res.json())
