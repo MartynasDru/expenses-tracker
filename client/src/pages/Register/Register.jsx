@@ -46,7 +46,7 @@ export const Register = () => {
             }
 
             if (!res.ok) {
-                throw new Error('Something went wrong');
+                throw new Error('Something went wrongg');
             }
 
             return res.json();
