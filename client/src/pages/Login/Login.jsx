@@ -23,6 +23,11 @@ const FormStyled = styled(Form)`
     width: 400px;
 `;
 
+const ErrorStyled = styled.div`
+    color: red;
+    text-align: center;
+`;
+
 export const Login = ({ onSuccess }) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
@@ -79,7 +84,7 @@ export const Login = ({ onSuccess }) => {
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                 />
-                {error && <div>{error}</div>}
+                {error && <ErrorStyled>{error}</ErrorStyled>}
                 <Button>Login</Button>
                 <LinkStyled to="/register">Register</LinkStyled>
             </FormStyled>
