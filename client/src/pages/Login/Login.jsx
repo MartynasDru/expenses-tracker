@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "../../components/Button/Button";
 import { Form } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
+import { UserContext } from "../../contexts/UserContextWrapper";
 
 const LoginContainer = styled.div`
     align-items: center;
@@ -28,11 +29,13 @@ const ErrorStyled = styled.div`
     text-align: center;
 `;
 
-export const Login = ({ onSuccess }) => {
+export const Login = () => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleLogin = () => {
         setIsLoading(true);
@@ -59,9 +62,10 @@ export const Login = ({ onSuccess }) => {
             return res.json();
         })
         .then((data) => {
-            onSuccess(data);
+            setUser(data);
             setIsLoading(false);
             setError('');
+            navigate('/');
         })
         .catch((e) => {
             setError(e.message);
