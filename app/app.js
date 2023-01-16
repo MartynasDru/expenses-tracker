@@ -36,7 +36,7 @@ const getUserFromToken = (req) => {
 
 const verifyToken = (req, res, next) => {
     try {
-        getUserFromToken();
+        getUserFromToken(req);
         next();
     } catch(e) {
         res.send({ error: 'Invalid Token' });
@@ -44,7 +44,7 @@ const verifyToken = (req, res, next) => {
 }
 
 app.get('/expenses', verifyToken, (req, res) => {
-    const user = getUserFromToken();
+    const user = getUserFromToken(req);
     
     connection.execute('SELECT * FROM expenses WHERE userId=?', [user.id], (err, expenses) => {
         res.send(expenses);
@@ -53,7 +53,7 @@ app.get('/expenses', verifyToken, (req, res) => {
 
 app.post('/expenses', verifyToken, (req, res) => {
     const { type, amount } = req.body;
-    const { id } = getUserFromToken();
+    const { id } = getUserFromToken(req);
 
     connection.execute(
         'INSERT INTO expenses (type, amount, userId) VALUES (?, ?, ?)',
