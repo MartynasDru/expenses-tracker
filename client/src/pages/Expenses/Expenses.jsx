@@ -67,7 +67,8 @@ export const Expenses = () => {
         fetch(`${process.env.REACT_APP_API_URL}/expenses`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_TOKEN_KEY)
             },
             body: JSON.stringify({
                 type, 
@@ -77,9 +78,11 @@ export const Expenses = () => {
         })
         .then((res) => res.json())
         .then((data) => {
-            setExpenses(data);
-            setType('');
-            setAmount('');
+            if (!data.error) {
+                setExpenses(data);
+                setType('');
+                setAmount('');
+            }
         });
     }
 
