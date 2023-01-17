@@ -55,13 +55,41 @@ app.post('/expenses', verifyToken, (req, res) => {
     const { type, amount, timestamp } = req.body;
     const { id } = getUserFromToken(req);
 
+    const sqlQuery = timestamp ?
+    'INSERT INTO expenses (type, amount, userId, timestamp) VALUES (?, ?, ?, ?)' :
+    'INSERT INTO expenses (type, amount, userId) VALUES (?, ?, ?)';
+
+    const data = [type, amount, id];
+    if (timestamp) {
+        data.push(timestamp);
+    }
+
     connection.execute(
-        'INSERT INTO expenses (type, amount, userId, timestamp) VALUES (?, ?, ?, ?)',
-        [type, amount, id, timestamp],
+        sqlQuery,
+        data,
         () => {
             connection.execute(
                 'SELECT * FROM expenses WHERE userId=?', 
                 [id], 
+                (err, expenses) => {
+                    res.send(expenses);
+                }
+            )
+        }
+    )
+});
+
+app.delete('/expenses/:id', verifyToken, (req, res) => {
+    const { id } = req.params;
+    const { id: userId } = getUserFromToken(req);
+
+    connection.execute(
+        'DELETE FROM expenses WHERE id=? AND userId=?',
+        [id, userId],
+        () => {
+            connection.execute(
+                'SELECT * FROM expenses WHERE userId=?', 
+                [userId], 
                 (err, expenses) => {
                     res.send(expenses);
                 }
