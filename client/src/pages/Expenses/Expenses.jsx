@@ -5,6 +5,7 @@ import { Form } from "../../components/Form/Form";
 import { Input } from "../../components/Input/Input";
 import { UserContext } from '../../contexts/UserContextWrapper';
 import { LOCAL_STORAGE_JWT_TOKEN_KEY } from '../../constants/constants';
+import { DateTime } from 'luxon';
 
 const ExpensesList = styled.ul`
     display: flex;
@@ -42,6 +43,7 @@ export const Expenses = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [type, setType] = useState('');
     const [amount, setAmount] = useState('');
+    const [date, setDate] = useState('');
     const { user } = useContext(UserContext);
 
     useEffect(() => {
@@ -73,11 +75,13 @@ export const Expenses = () => {
             body: JSON.stringify({
                 type, 
                 amount,
-                userId: user.id
+                userId: user.id,
+                timestamp: date
             })
         })
         .then((res) => res.json())
         .then((data) => {
+            console.log(data);
             if (!data.error) {
                 setExpenses(data);
                 setType('');
@@ -104,12 +108,20 @@ export const Expenses = () => {
                     onChange={(e) => setAmount(e.target.value)}
                     value={amount}
                 />
+                <Input 
+                    placeholder="Date"
+                    type="datetime-local"
+                    onChange={(e) => setDate(e.target.value)}
+                    value={date}
+                />
                 <Button>Add</Button>
             </Form>
             <h2>Total spent: €{totalSum}</h2>
             {expenses.map((exp) => (
                 <ExpensesListItem key={exp.id}>
-                    <ExpenseType>{exp.type}</ExpenseType>
+                    <ExpenseType>
+                        {exp.type} ({DateTime.fromISO(exp.timestamp).toFormat('yyyy-LL-dd HH:mm')})
+                    </ExpenseType>
                     <ExpenseAmount>€{exp.amount}</ExpenseAmount>
                 </ExpensesListItem>
             ))}

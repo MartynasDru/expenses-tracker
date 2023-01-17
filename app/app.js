@@ -52,12 +52,12 @@ app.get('/expenses', verifyToken, (req, res) => {
 });
 
 app.post('/expenses', verifyToken, (req, res) => {
-    const { type, amount } = req.body;
+    const { type, amount, timestamp } = req.body;
     const { id } = getUserFromToken(req);
 
     connection.execute(
-        'INSERT INTO expenses (type, amount, userId) VALUES (?, ?, ?)',
-        [type, amount, id],
+        'INSERT INTO expenses (type, amount, userId, timestamp) VALUES (?, ?, ?, ?)',
+        [type, amount, id, timestamp],
         () => {
             connection.execute(
                 'SELECT * FROM expenses WHERE userId=?', 
