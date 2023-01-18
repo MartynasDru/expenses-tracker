@@ -3,6 +3,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 
 require('dotenv').config();
 
@@ -148,6 +149,26 @@ app.get('/token/verify', (req, res) => {
         res.send({ error: 'Invalid Token' });
     }
 });
+
+app.get('/test/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`);
+        const data = await response.json();
+
+        connection.execute('INSERT INTO test(title) VALUES (?)', [data.title], (err, result) => {
+            res.send(data);
+        });
+    } catch(e) {
+        res.send('Something went wrong');
+    }
+});
+
+// fetch('https://jsonplaceholder.typicode.com/todos/1')
+//     .then(res => res.json())
+//     .then(data => {
+//         console.log(data);
+//     })
 
 const PORT = 8080;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
